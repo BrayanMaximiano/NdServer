@@ -3,6 +3,7 @@ const app = express();
 const mysql = require("mysql2");
 const cors = require("cors");
 const { query } = require("express");
+const nodemailer = require("nodemailer");
 
 const db = mysql.createPool({
   host: "novadirecao.mysql.dbaas.com.br",
@@ -14,20 +15,30 @@ const db = mysql.createPool({
 app.use(cors());
 app.use(express.json());
 
-{
-  /** Adiciona vagas ao */
-}
-
+//adiciona vas ao banco de dados
 
 app.post("/register", (req, res) => {
   const { nome } = req.body;
   const { salario } = req.body;
   const { local } = req.body;
+  const { description } =req.body
 
-  let SQL = "INSERT INTO vagas (nome, salario, local) VALUES ( ?,?,? )";
-  db.query( SQL, [nome, salario, local], (err,result)=>{
-    console.log(err)
-  })
+  let SQL = "INSERT INTO vagas (nome, salario, local, description) VALUES ( ?,?,?,? )";
+  db.query(SQL, [nome, salario, local, description], (err, result) => {
+    console.log(err);
+  });
+});
+
+app.post("/registerUrgente", (req, res) => {
+  const { nome } = req.body;
+  const { salario } = req.body;
+  const { local } = req.body;
+  const { description } =req.body
+
+  let SQL = "INSERT INTO HotVagas (nome, salario, local, description) VALUES ( ?,?,?,? )";
+  db.query(SQL, [nome, salario, local, description], (err, result) => {
+    console.log(err);
+  });
 });
 
 {
@@ -56,40 +67,65 @@ app.get("/getHotVagas", (req, res) => {
   });
 });
 
-
 {
   /** edita valores */
 }
 
-app.put("/edit", (req,res)=> {
-  const {id} = req.body;
-  const {nome} = req.body;
-  const {salario} = req.body;
-  const {local } = req.body;
+app.put("/edit", (req, res) => {
+  const { id } = req.body;
+  const { nome } = req.body;
+  const { salario } = req.body;
+  const { local } = req.body;
+  const { description } = req.body;
 
-  let SQL = 'UPDATE vagas SET nome = ? , salario = ?, local = ? WHERE  id = ?';
+  let SQL = "UPDATE vagas SET nome = ? , salario = ?, local = ?, description = ?  WHERE  id = ?";
 
-  db.query(SQL,[nome,salario,local,id], (err,result)=>{
-    if(err) console.log(err)
-    else(res.send(result))
-  })
+  db.query(SQL, [nome, salario, local, description, id], (err, result) => {
+    if (err) console.log(err);
+    else res.send(result);
+  });
+});
 
-})
+app.put("/editUrgent", (req, res) => {
+  const { id } = req.body;
+  const { nome } = req.body;
+  const { salario } = req.body;
+  const { local } = req.body;
+  const { description } = req.body;
+
+  let SQL = "UPDATE HotVagas SET nome = ? , salario = ?, local = ?, description = ?  WHERE  id = ?";
+
+  db.query(SQL, [nome, salario, local, description, id], (err, result) => {
+    if (err) console.log(err);
+    else res.send(result);
+  });
+});
 
 {
   /** deleta vagas */
 }
 
-app.delete('/delete/:id', (req,res) =>{
-  const {id} = req.params;
+app.delete("/delete/:id", (req, res) => {
+  const { id } = req.params;
 
-  let SQL = 'DELETE FROM vagas WHERE id = ?';
+  let SQL = "DELETE FROM vagas WHERE id = ?";
 
-  db.query(SQL, [id],(err, result) =>{
-    if(err) console.log(err)
-    else res.send(result)
-  })
-})
+  db.query(SQL, [id], (err, result) => {
+    if (err) console.log(err);
+    else res.send(result);
+  });
+});
+
+app.delete("/deleteUrgente/:id", (req, res) => {
+  const { id } = req.params;
+
+  let SQL = "DELETE FROM HotVagas WHERE id = ?";
+
+  db.query(SQL, [id], (err, result) => {
+    if (err) console.log(err);
+    else res.send(result);
+  });
+});
 
 {
   /** Configuracao inicial do servidor */
