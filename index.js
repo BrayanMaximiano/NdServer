@@ -131,6 +131,6 @@ app.delete("/deleteUrgente/:id", (req, res) => {
   /** Configuracao inicial do servidor */
 }
 
-app.listen(3001, () => {
+app.listen(process.env.PORT || 3333, () => {
   console.log("Server is Running!");
 });
