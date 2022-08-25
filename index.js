@@ -5,6 +5,8 @@ const cors = require("cors");
 const { query } = require("express");
 const nodemailer = require("nodemailer");
 
+const port = process.env.PORT || 3333;
+
 const db = mysql.createPool({
   host: "novadirecao.mysql.dbaas.com.br",
   user: "novadirecao",
@@ -21,7 +23,7 @@ app.post("/register", (req, res) => {
   const { nome } = req.body;
   const { salario } = req.body;
   const { local } = req.body;
-  const { description } =req.body
+  const { description } = req.body;
 
   let SQL = "INSERT INTO vagas (nome, salario, local, description) VALUES ( ?,?,?,? )";
   db.query(SQL, [nome, salario, local, description], (err, result) => {
@@ -33,7 +35,7 @@ app.post("/registerUrgente", (req, res) => {
   const { nome } = req.body;
   const { salario } = req.body;
   const { local } = req.body;
-  const { description } =req.body
+  const { description } = req.body;
 
   let SQL = "INSERT INTO HotVagas (nome, salario, local, description) VALUES ( ?,?,?,? )";
   db.query(SQL, [nome, salario, local, description], (err, result) => {
@@ -131,6 +133,6 @@ app.delete("/deleteUrgente/:id", (req, res) => {
   /** Configuracao inicial do servidor */
 }
 
-app.listen(process.env.PORT || 3333, () => {
+app.listen(port, () => {
   console.log("Server is Running!");
 });
