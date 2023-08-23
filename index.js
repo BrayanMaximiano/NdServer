@@ -56,6 +56,15 @@ app.get("/getVagas", (req, res) => {
   });
 });
 
+app.get("/getContracts", (req, res) => {
+  let SQL = "SELECT * from Contratos";
+
+  bd.query(SQL , (err, result) => {
+    if(err) console.log(err);
+    else res.send(result);
+  });
+});
+
 {
   /** mostra as vagas importantes */
 }
